@@ -8,7 +8,7 @@
     </div>
     <a href="{{ url_for('add_client') }}" class="inline-flex items-center justify-center px-5 py-3 border border-transparent text-base font-medium rounded-xl text-white bg-indigo-600 hover:bg-indigo-700 transition-all shadow-sm hover:shadow-md">
         <i data-lucide="plus" class="w-5 h-5 mr-2"></i>
-        {{ _('add_user') }}
+        {{ _('create_client_btn') }}
     </a>
 </div>
 
@@ -90,11 +90,7 @@
             <i data-lucide="users-2" class="w-8 h-8"></i>
         </div>
         <h3 class="text-xl font-bold text-gray-900 mb-2">{{ _('no_clients') }}</h3>
-        <p class="text-gray-500 mb-8 max-w-sm mx-auto">{{ _('no_clients_desc') }}</p>
-        <a href="{{ url_for('add_client') }}" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-xl text-white bg-indigo-600 hover:bg-indigo-700 shadow-lg shadow-indigo-200 transition-all">
-            <i data-lucide="plus" class="w-5 h-5 mr-2"></i>
-            {{ _('create_client_btn') }}
-        </a>
+        <p class="text-gray-500 max-w-sm mx-auto">{{ _('no_clients_desc') }}</p>
     </div>
     {% endfor %}
 </div>
