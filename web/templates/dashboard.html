@@ -43,6 +43,16 @@
             <p class="text-2xl font-bold text-gray-900">{{ stats.server_ip }}</p>
         </div>
     </div>
+
+    <div class="bg-white overflow-hidden shadow-sm rounded-2xl border border-gray-100 p-6 flex items-center space-x-4">
+        <div class="p-3 bg-amber-50 rounded-xl text-amber-600">
+            <i data-lucide="arrow-up-down" class="w-6 h-6"></i>
+        </div>
+        <div>
+            <p class="text-sm font-medium text-gray-500 truncate">{{ _('total_data') }}</p>
+            <p class="text-2xl font-bold text-gray-900">{{ stats.total_data | format_bytes }}</p>
+        </div>
+    </div>
 </div>
 
 <!-- Clients Grid -->
@@ -70,6 +80,10 @@
                 <div class="flex items-center text-sm text-gray-500">
                     <i data-lucide="calendar" class="w-4 h-4 mr-2"></i>
                     <span>{{ _('created_at') }}: {{ client.created_at[:10] }}</span>
+                </div>
+                <div class="flex items-center text-sm text-gray-500">
+                    <i data-lucide="arrow-up-down" class="w-4 h-4 mr-2"></i>
+                    <span>{{ _('data_usage') }}: {{ client.data_usage | format_bytes }}</span>
                 </div>
             </div>
         </div>

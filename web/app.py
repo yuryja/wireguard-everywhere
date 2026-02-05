@@ -49,6 +49,19 @@ def inject_i18n():
         
     return dict(_=_, current_lang=lang, available_languages=i18n.get_available_languages())
 
+@app.template_filter('format_bytes')
+def format_bytes(size):
+    """Format bytes to human readable string"""
+    if size is None:
+        size = 0
+    power = 2**10
+    n = 0
+    power_labels = {0 : '', 1: 'K', 2: 'M', 3: 'G', 4: 'T'}
+    while size > power:
+        size /= power
+        n += 1
+    return f"{size:.2f} {power_labels[n]}B"
+
 class User(UserMixin):
     """User model for Flask-Login"""
     def __init__(self, user_id, username):
@@ -83,13 +96,22 @@ def about():
 def index():
     """Dashboard - show all clients"""
     clients = db.get_all_clients()
+    transfer_stats = wg_manager.get_transfer_stats()
+    
+    # Enrich clients with real-time data usage and convert to dict for template/logic
+    enriched_clients = []
+    for client in clients:
+        c_dict = dict(client)
+        c_dict['data_usage'] = transfer_stats.get(client['public_key'], 0)
+        enriched_clients.append(c_dict)
+        
     stats = {
-        'total_clients': len(clients),
-        'active_clients': sum(1 for c in clients if c['enabled']),
-        'total_data': 0, # Placeholder until data tracking is implemented
+        'total_clients': len(enriched_clients),
+        'active_clients': sum(1 for c in enriched_clients if c['enabled']),
+        'total_data': sum(c['data_usage'] for c in enriched_clients),
         'server_ip': wg_manager.get_server_config()['endpoint']
     }
-    return render_template('dashboard.html', clients=clients, stats=stats)
+    return render_template('dashboard.html', clients=enriched_clients, stats=stats)
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -125,14 +147,7 @@ def logout():
     """Logout current user"""
     db.log_activity(current_user.id, 'logout', 'User logged out')
     logout_user()
-    logout_user()
-    flash('flash_client_deleted', 'success') # Reusing existing key or adding new one? 'flash_logout_success' not in json
-    # Let's add 'You have been logged out successfully' key later or use raw string for now if not critical
-    # For strict i18n, let's stick to keys. I missed adding logout message to json.
-    # I will use a generic one or assume user won't mind English for logout for a sec.
-    # ACTUALLY, I missed adding 'flash_logout' to json. 
-    # Let's use English for now for logout to avoid key error if I didn't add it.
-    # Wait, I can just update the json later. 
+    flash('flash_logout', 'success')
     return redirect(url_for('login'))
 
 
@@ -145,7 +160,7 @@ def add_client():
         
         # Validate client name
         if not client_name:
-            flash('Client name is required', 'error') # Missed key
+            flash('flash_name_required', 'error')
             return redirect(url_for('add_client'))
         
         # Sanitize client name (same as install.sh)
@@ -323,7 +338,7 @@ def settings():
             elif new_password != confirm_password:
                 flash('flash_password_mismatch', 'error')
             elif len(new_password) < 8:
-                flash('Password must be at least 8 characters long', 'error') # Missed key
+                flash('flash_password_min_length', 'error')
             else:
                 # Hash new password
                 password_hash = bcrypt.hashpw(new_password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')

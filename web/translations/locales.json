@@ -73,11 +73,16 @@
         "flash_password_changed": "Password changed successfully", 
         "flash_password_mismatch": "New passwords do not match",
         "flash_password_incorrect": "Current password is incorrect",
+        "flash_logout": "Logged out successfully",
+        "flash_name_required": "Client name is required",
+        "flash_password_min_length": "Password must be at least 8 characters long",
         "add_client_subtitle": "Add a new device to your secure VPN network.",
         "add_client_help": "A key pair and static IP address will be generated automatically.",
         "config_preview": "Configuration",
         "language": "Language",
         "server_ip": "Server IP",
+        "total_data": "Total Data Usage",
+        "data_usage": "Data Usage",
         "no_clients_desc": "Get started by adding your first WireGuard user."
     },
     "es": {
@@ -154,11 +159,16 @@
         "flash_password_changed": "Contraseña cambiada exitosamente",
         "flash_password_mismatch": "Las nuevas contraseñas no coinciden",
         "flash_password_incorrect": "La contraseña actual es incorrecta",
+        "flash_logout": "Sesión cerrada exitosamente",
+        "flash_name_required": "El nombre del cliente es obligatorio",
+        "flash_password_min_length": "La contraseña debe tener al menos 8 caracteres",
         "add_client_subtitle": "Agrega un nuevo dispositivo a tu red VPN segura.",
         "add_client_help": "Se generará automáticamente un par de llaves y una dirección IP estática.",
         "config_preview": "Configuración",
         "language": "Idioma",
         "server_ip": "IP Servidor",
+        "total_data": "Uso Total de Datos",
+        "data_usage": "Uso de Datos",
         "no_clients_desc": "Comienza agregando tu primer usuario de WireGuard."
     },
     "pt": {
@@ -235,11 +245,16 @@
         "flash_password_changed": "Senha alterada com sucesso",
         "flash_password_mismatch": "As novas senhas não coincidem",
         "flash_password_incorrect": "A senha atual está incorreta",
+        "flash_logout": "Sessão encerrada com sucesso",
+        "flash_name_required": "O nome do cliente é obrigatório",
+        "flash_password_min_length": "A senha deve ter pelo menos 8 caracteres",
         "add_client_subtitle": "Adicione um novo dispositivo à sua rede VPN segura.",
         "add_client_help": "Um par de chaves e um endereço IP estático serão gerados automaticamente.",
         "config_preview": "Configuração",
         "language": "Idioma",
         "server_ip": "IP Servidor",
+        "total_data": "Uso Total de Dados",
+        "data_usage": "Uso de Dados",
         "no_clients_desc": "Comece adicionando seu primeiro usuário WireGuard."
     },
     "fr": {
@@ -316,11 +331,16 @@
         "flash_password_changed": "Mot de passe modifié avec succès",
         "flash_password_mismatch": "Les nouveaux mots de passe ne correspondent pas",
         "flash_password_incorrect": "Le mot de passe actuel est incorrect",
+        "flash_logout": "Déconnexion réussie",
+        "flash_name_required": "Le nom du client est requis",
+        "flash_password_min_length": "Le mot de passe doit comporter au moins 8 caractères",
         "add_client_subtitle": "Ajoutez un nouvel appareil à votre réseau VPN sécurisé.",
         "add_client_help": "Une paire de clés et une adresse IP statique seront générées automatiquement.",
         "config_preview": "Configuration",
         "language": "Langue",
         "server_ip": "IP Serveur",
+        "total_data": "Consommation Totale",
+        "data_usage": "Données Utilisées",
         "no_clients_desc": "Commencez par ajouter votre premier utilisateur WireGuard."
     },
     "it": {
@@ -402,6 +422,8 @@
         "config_preview": "Configurazione",
         "language": "Lingua",
         "server_ip": "IP Server",
+        "total_data": "Traffico Totale",
+        "data_usage": "Dati Utilizzati",
         "no_clients_desc": "Inizia aggiungendo il tuo primo utente WireGuard."
     }
 }

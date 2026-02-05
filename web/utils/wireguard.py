@@ -269,3 +269,27 @@ AllowedIPs = {ip_address}/32{ipv6_allowed}
         
     def get_client_config_path(self, name):
         return os.path.join(self.clients_dir, f"{name}.conf")
+
+    def get_transfer_stats(self):
+        """Get transfer statistics for all peers from wg show dump"""
+        try:
+            # wg show wg0 dump outputs:
+            # interface_pubkey interface_privkey listen_port fwmark
+            # peer_pubkey psk endpoint allowed_ips latest_handshake transfer_rx transfer_tx keepalive
+            output = self.run_command("wg show wg0 dump")
+            lines = output.split('\n')
+            stats = {}
+            
+            # Skip first line if it exists (interface info)
+            if len(lines) > 1:
+                for line in lines[1:]:
+                    parts = line.split('\t')
+                    if len(parts) >= 8:
+                        pubkey = parts[0]
+                        rx = int(parts[5]) if parts[5].isdigit() else 0
+                        tx = int(parts[6]) if parts[6].isdigit() else 0
+                        stats[pubkey] = rx + tx
+            return stats
+        except Exception:
+            # Return empty if command fails (e.g. no wg installed locally during dev)
+            return {}
