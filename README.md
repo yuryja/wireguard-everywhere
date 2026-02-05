@@ -40,15 +40,15 @@ Fast and secure WireGuard VPN server installer for Linux. Install a production-r
 Run as root:
 
 ```bash
-wget https://raw.githubusercontent.com/yuryja/wireguard-everywhere/main/install.sh -O wireguard-install.sh
-bash wireguard-install.sh
+wget https://raw.githubusercontent.com/yuryja/wireguard-everywhere/main/install.sh -O install.sh
+sudo bash install.sh
 ```
 
 Or with curl:
 
 ```bash
 curl -O https://raw.githubusercontent.com/yuryja/wireguard-everywhere/main/install.sh
-bash install.sh
+sudo bash install.sh
 ```
 
 ### First-Time Setup

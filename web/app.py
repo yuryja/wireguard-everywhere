@@ -16,7 +16,7 @@ app = Flask(__name__)
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', secrets.token_hex(32))
 app.config['DATABASE'] = os.environ.get('DATABASE', 'wireguard.db')
 app.config['WG_CONFIG_PATH'] = os.environ.get('WG_CONFIG_PATH', '/etc/wireguard/wg0.conf')
-app.config['CLIENT_CONFIG_DIR'] = os.path.dirname(os.path.abspath(__file__))
+app.config['CLIENT_CONFIG_DIR'] = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'clients')
 app.config['TRANSLATIONS_PATH'] = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'translations/locales.json')
 
 # Initialize database
@@ -86,7 +86,8 @@ def index():
     stats = {
         'total_clients': len(clients),
         'active_clients': sum(1 for c in clients if c['enabled']),
-        'total_data': sum(c.get('data_usage', 0) for c in clients)
+        'total_data': sum(c.get('data_usage', 0) for c in clients),
+        'server_ip': wg_manager.get_server_config()['endpoint']
     }
     return render_template('dashboard.html', clients=clients, stats=stats)
 

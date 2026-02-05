@@ -1,87 +1,141 @@
 {% extends "layout.html" %}
 
 {% block content %}
-<nav>
-    <ul>
-        <li><a href="{{ url_for('index') }}">{{ _('back_dashboard') }}</a></li>
-    </ul>
-</nav>
-
-<hgroup>
-    <h1>{{ _('settings') }}</h1>
-    <h2>{{ _('system_info') }}</h2>
-</hgroup>
-
-<div class="grid">
+<div class="mb-8 flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
     <div>
-        <article>
-            <header>{{ _('change_password') }}</header>
-            <form method="post">
-                <input type="hidden" name="action" value="change_password">
-                
-                <label for="current_password">{{ _('current_password') }}</label>
-                <input type="password" id="current_password" name="current_password" required>
-                
-                <label for="new_password">{{ _('new_password') }}</label>
-                <input type="password" id="new_password" name="new_password" required minlength="8">
-                
-                <label for="confirm_password">{{ _('confirm_password') }}</label>
-                <input type="password" id="confirm_password" name="confirm_password" required minlength="8">
-                
-                <button type="submit">{{ _('update_password') }}</button>
-            </form>
-        </article>
+        <h1 class="text-3xl font-extrabold text-slate-900 tracking-tight">{{ _('settings') }}</h1>
+        <p class="text-slate-500 mt-1">{{ _('system_info') }}</p>
+    </div>
+    <a href="{{ url_for('index') }}" class="inline-flex items-center text-indigo-600 hover:text-indigo-800 transition-colors font-medium">
+        <i data-lucide="arrow-left" class="w-4 h-4 mr-2"></i>
+        {{ _('back_dashboard') }}
+    </a>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <!-- Password Change Section -->
+    <div class="space-y-6">
+        <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
+            <div class="p-8">
+                <div class="flex items-center space-x-3 mb-6">
+                    <div class="p-2 bg-amber-50 rounded-lg text-amber-600">
+                        <i data-lucide="lock" class="w-6 h-6"></i>
+                    </div>
+                    <h2 class="text-xl font-bold text-gray-900">{{ _('change_password') }}</h2>
+                </div>
+
+                <form method="post" class="space-y-4">
+                    <input type="hidden" name="action" value="change_password">
+                    
+                    <div>
+                        <label for="current_password" class="block text-sm font-medium text-gray-700 mb-1">{{ _('current_password') }}</label>
+                        <input type="password" id="current_password" name="current_password" required
+                               class="block w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all">
+                    </div>
+                    
+                    <div>
+                        <label for="new_password" class="block text-sm font-medium text-gray-700 mb-1">{{ _('new_password') }}</label>
+                        <input type="password" id="new_password" name="new_password" required minlength="8"
+                               class="block w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all">
+                    </div>
+                    
+                    <div>
+                        <label for="confirm_password" class="block text-sm font-medium text-gray-700 mb-1">{{ _('confirm_password') }}</label>
+                        <input type="password" id="confirm_password" name="confirm_password" required minlength="8"
+                               class="block w-full px-4 py-3 border border-gray-300 rounded-xl focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-all">
+                    </div>
+                    
+                    <div class="pt-4">
+                        <button type="submit" class="w-full flex justify-center py-3 px-4 border border-transparent rounded-xl shadow-sm text-sm font-bold text-white bg-indigo-600 hover:bg-indigo-700 transition-all">
+                            {{ _('update_password') }}
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- System Info Card -->
+        <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden">
+            <div class="p-8">
+                <div class="flex items-center space-x-3 mb-6">
+                    <div class="p-2 bg-blue-50 rounded-lg text-blue-600">
+                        <i data-lucide="server" class="w-6 h-6"></i>
+                    </div>
+                    <h2 class="text-xl font-bold text-gray-900">{{ _('system_info') }}</h2>
+                </div>
+
+                <div class="space-y-3">
+                    <div class="flex justify-between items-center py-2 border-b border-gray-50">
+                        <span class="text-sm text-gray-500">{{ _('wireguard_version') }}</span>
+                        <span class="text-sm font-mono font-bold bg-slate-100 px-2 py-1 rounded-lg text-slate-700">Latest</span>
+                    </div>
+                    <div class="flex justify-between items-center py-2 border-b border-gray-50">
+                        <span class="text-sm text-gray-500">{{ _('web_interface') }}</span>
+                        <span class="text-sm font-mono text-gray-700">v1.1.0</span>
+                    </div>
+                    <div class="flex justify-between items-center py-2">
+                        <span class="text-sm text-gray-500">{{ _('internal_ip') }}</span>
+                        <span class="text-sm font-mono text-indigo-600 font-bold underline">10.7.0.1</span>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <div>
-        <article>
-            <header>{{ _('system_info') }}</header>
-            <table role="grid">
-                <tr>
-                    <th scope="row">{{ _('wireguard_version') }}</th>
-                    <td><code>Latest</code></td>
-                </tr>
-                <tr>
-                    <th scope="row">{{ _('web_interface') }}</th>
-                    <td>v1.1.0</td>
-                </tr>
-                <tr>
-                    <th scope="row">{{ _('internal_ip') }}</th>
-                    <td>10.7.0.1</td>
-                </tr>
-            </table>
-        </article>
-
-        <article>
-            <header>{{ _('activity_log') }}</header>
-            <div style="max-height: 400px; overflow-y: auto;">
-                <table role="grid" class="striped">
-                    <thead>
+    <!-- Activity Log Section -->
+    <div class="bg-white rounded-3xl shadow-sm border border-gray-100 overflow-hidden flex flex-col transition-all hover:shadow-md">
+        <div class="p-8 border-b border-gray-100 flex items-center justify-between sticky top-0 bg-white z-10">
+            <div class="flex items-center space-x-3">
+                <div class="p-2 bg-slate-100 rounded-lg text-slate-600">
+                    <i data-lucide="list" class="w-6 h-6"></i>
+                </div>
+                <h2 class="text-xl font-bold text-gray-900">{{ _('activity_log') }}</h2>
+            </div>
+        </div>
+        
+        <div class="flex-1 overflow-y-auto max-h-[600px] custom-scrollbar">
+            <div class="p-0">
+                <table class="min-w-full divide-y divide-gray-100">
+                    <thead class="bg-gray-50">
                         <tr>
-                            <th>{{ _('action') }}</th>
-                            <th>{{ _('time') }}</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">{{ _('action') }}</th>
+                            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">{{ _('time') }}</th>
                         </tr>
                     </thead>
-                    <tbody>
+                    <tbody class="divide-y divide-gray-100">
                         {% for log in logs %}
-                        <tr>
-                            <td>
-                                <strong>{{ log.username }}</strong>: {{ log.action }}<br>
-                                <small>{{ log.details }}</small>
+                        <tr class="hover:bg-gray-50 transition-colors">
+                            <td class="px-6 py-4">
+                                <span class="block text-sm font-bold text-gray-900">{{ log.username }}</span>
+                                <span class="block text-xs text-indigo-600 mb-1">{{ log.action }}</span>
+                                <span class="block text-xs text-gray-500 truncate max-w-[200px]" title="{{ log.details }}">{{ log.details }}</span>
                             </td>
-                            <td style="font-size: 0.8rem; white-space: nowrap;">
+                            <td class="px-6 py-4 text-right text-[10px] text-gray-400 font-mono whitespace-nowrap">
                                 {{ log.created_at }}
                             </td>
                         </tr>
                         {% else %}
                         <tr>
-                            <td colspan="2" style="text-align: center;">{{ _('no_logs') }}</td>
+                            <td colspan="2" class="px-6 py-12 text-center">
+                                <div class="flex flex-col items-center">
+                                    <i data-lucide="clipboard-list" class="w-10 h-10 text-gray-200 mb-2"></i>
+                                    <p class="text-sm text-gray-400">{{ _('no_logs') }}</p>
+                                </div>
+                            </td>
                         </tr>
                         {% endfor %}
                     </tbody>
                 </table>
             </div>
-        </article>
+        </div>
     </div>
 </div>
+
+<style>
+    .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+    .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+    .custom-scrollbar::-webkit-scrollbar-thumb { background: #e2e8f0; border-radius: 10px; }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #cbd5e1; }
+</style>
 {% endblock %}
+

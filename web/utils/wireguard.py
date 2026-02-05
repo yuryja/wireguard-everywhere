@@ -40,7 +40,16 @@ class WireGuardManager:
         
         # Extract Endpoint (from comments added by install.sh)
         endpoint_match = re.search(r'# ENDPOINT\s+(.+)', content)
-        endpoint = endpoint_match.group(1) if endpoint_match else "SERVER_IP"
+        if endpoint_match:
+            endpoint = endpoint_match.group(1).strip()
+        else:
+            # Fallback: Try to detect public IP automatically
+            try:
+                endpoint = self.run_command("curl -s -4 https://api.ipify.org || wget -qO- -4 https://api.ipify.org").strip()
+                if not endpoint or not re.match(r'^[0-9.]+$', endpoint):
+                    endpoint = "SERVER_IP"
+            except:
+                endpoint = "SERVER_IP"
         
         # Get server public key
         # We need to run wg show because private key is in config, not public
