@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+env/
+.env
+
+# Database
+*.db
+*.sqlite3
+web/wireguard.db
+
+# WireGuard Configs (seguridad)
+*.conf
+web/clients/
+
+# OS Files
+.DS_Store
+Thumbs.db
+._*
+
+# IDEs
+.vscode/
+.idea/

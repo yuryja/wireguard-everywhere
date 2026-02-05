@@ -1,0 +1,87 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<nav>
+    <ul>
+        <li><a href="{{ url_for('index') }}">← Back to Dashboard</a></li>
+    </ul>
+</nav>
+
+<hgroup>
+    <h1>Settings</h1>
+    <h2>System Configuration</h2>
+</hgroup>
+
+<div class="grid">
+    <div>
+        <article>
+            <header>Change Password</header>
+            <form method="post">
+                <input type="hidden" name="action" value="change_password">
+                
+                <label for="current_password">Current Password</label>
+                <input type="password" id="current_password" name="current_password" required>
+                
+                <label for="new_password">New Password</label>
+                <input type="password" id="new_password" name="new_password" required minlength="8">
+                
+                <label for="confirm_password">Confirm New Password</label>
+                <input type="password" id="confirm_password" name="confirm_password" required minlength="8">
+                
+                <button type="submit">Update Password</button>
+            </form>
+        </article>
+    </div>
+
+    <div>
+        <article>
+            <header>System Info</header>
+            <table role="grid">
+                <tr>
+                    <th scope="row">WireGuard Version</th>
+                    <td><code>Latest</code></td>
+                </tr>
+                <tr>
+                    <th scope="row">Web Interface</th>
+                    <td>v1.0.0</td>
+                </tr>
+                <tr>
+                    <th scope="row">Internal IP</th>
+                    <td>10.7.0.1</td>
+                </tr>
+            </table>
+        </article>
+
+        <article>
+            <header>Activity Log</header>
+            <div style="max-height: 400px; overflow-y: auto;">
+                <table role="grid" class="striped">
+                    <thead>
+                        <tr>
+                            <th>Action</th>
+                            <th>Time</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for log in logs %}
+                        <tr>
+                            <td>
+                                <strong>{{ log.username }}</strong>: {{ log.action }}<br>
+                                <small>{{ log.details }}</small>
+                            </td>
+                            <td style="font-size: 0.8rem; white-space: nowrap;">
+                                {{ log.created_at }}
+                            </td>
+                        </tr>
+                        {% else %}
+                        <tr>
+                            <td colspan="2" style="text-align: center;">No logs yet</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </article>
+    </div>
+</div>
+{% endblock %}

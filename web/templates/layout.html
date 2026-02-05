@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>WireGuard Manager</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+    <style>
+        :root { --primary: #e63946; } /* WireGuard Red-ish */
+        nav strong { font-size: 1.5rem; }
+        .grid-dashboard { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1rem; }
+        .card-client { border: 1px solid var(--muted-border-color); padding: 1rem; border-radius: var(--border-radius); }
+        .status-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 5px; }
+        .status-active { background-color: #2ecc71; }
+        .status-inactive { background-color: #95a5a6; }
+        .actions { display: flex; gap: 0.5rem; margin-top: 1rem; }
+        .actions a, .actions button { padding: 0.2rem 0.5rem; font-size: 0.8rem; margin-bottom: 0; }
+        .flash-messages { margin-bottom: 2rem; }
+        .flash-error { background-color: #ffebee; color: #c62828; padding: 1rem; border-radius: var(--border-radius); border: 1px solid #ef9a9a; }
+        .flash-success { background-color: #e8f5e9; color: #2e7d32; padding: 1rem; border-radius: var(--border-radius); border: 1px solid #a5d6a7; }
+        footer { margin-top: 4rem; text-align: center; opacity: 0.7; font-size: 0.8rem; }
+        
+        /* Dark mode tweaks */
+        @media (prefers-color-scheme: dark) {
+            .flash-error { background-color: #b71c1c; color: #ffcdd2; border-color: #e57373; }
+            .flash-success { background-color: #1b5e20; color: #c8e6c9; border-color: #81c784; }
+        }
+    </style>
+</head>
+<body>
+    <nav class="container-fluid">
+        <ul>
+            <li><strong>🛡️ WireGuard Manager</strong></li>
+        </ul>
+        <ul>
+            {% if current_user.is_authenticated %}
+                <li><a href="{{ url_for('index') }}" role="button" class="outline">Dashboard</a></li>
+                <li><a href="{{ url_for('settings') }}" role="button" class="outline">Settings</a></li>
+                <li><a href="{{ url_for('logout') }}" role="button" class="secondary">Logout</a></li>
+            {% else %}
+                <li><a href="https://www.wireguard.com/" target="_blank">About WireGuard</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+
+    <main class="container">
+        <!-- Flash Messages -->
+        <div class="flash-messages">
+            {% with messages = get_flashed_messages(with_categories=true) %}
+                {% if messages %}
+                    {% for category, message in messages %}
+                        <div class="flash-{{ category }}">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+        </div>
+
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+        <small>Powered by WireGuard Everywhere • <a href="https://github.com/yuryja/wireguard-everywhere">GitHub</a></small>
+    </footer>
+
+    <script>
+        // Simple helper to auto-dismiss flash messages
+        setTimeout(() => {
+            document.querySelectorAll('.flash-messages div').forEach(el => el.style.display = 'none');
+        }, 5000);
+    </script>
+</body>
+</html>

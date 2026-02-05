@@ -1,0 +1,49 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<hgroup>
+    <h1>Dashboard</h1>
+    <h2>Manage your WireGuard clients</h2>
+</hgroup>
+
+<div class="grid" style="margin-bottom: 2rem;">
+    <article>
+        <header>Total Clients</header>
+        <h3>{{ stats.total_clients }}</h3>
+    </article>
+    <article>
+        <header>Active</header>
+        <h3 style="color: #2ecc71;">{{ stats.active_clients }}</h3>
+    </article>
+    <article style="display: flex; align-items: center; justify-content: center;">
+        <a href="{{ url_for('add_client') }}" role="button" class="contrast" style="width: 100%;">+ Add User</a>
+    </article>
+</div>
+
+<div class="grid-dashboard">
+    {% for client in clients %}
+    <div class="card-client">
+        <header style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+            <strong>{{ client.name }}</strong>
+            <div>
+                <span class="status-dot {{ 'status-active' if client.enabled else 'status-inactive' }}"></span>
+                <small>{{ 'Active' if client.enabled else 'Disabled' }}</small>
+            </div>
+        </header>
+        <div style="font-size: 0.9rem; margin-bottom: 1rem;">
+            <div>IP: <code>{{ client.ip_address }}</code></div>
+            <div style="margin-top: 0.5rem; font-size: 0.8rem; color: var(--muted-color);">Created: {{ client.created_at[:10] }}</div>
+        </div>
+        <div class="actions">
+            <a href="{{ url_for('view_client', client_name=client.name) }}" role="button" class="outline">Details</a>
+            <a href="{{ url_for('download_client_config', client_name=client.name) }}" role="button" class="outline secondary">Conf</a>
+        </div>
+    </div>
+    {% else %}
+    <div style="grid-column: 1 / -1; text-align: center; padding: 3rem; background: var(--card-background-color); border-radius: var(--border-radius);">
+        <p>No clients found. Create your first VPN user!</p>
+        <a href="{{ url_for('add_client') }}" role="button">Create Client</a>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

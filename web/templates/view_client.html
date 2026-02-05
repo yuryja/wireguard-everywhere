@@ -1,0 +1,116 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<nav>
+    <ul>
+        <li><a href="{{ url_for('index') }}">← Back to Dashboard</a></li>
+    </ul>
+</nav>
+
+<div class="grid">
+    <div>
+        <hgroup>
+            <h1>{{ client.name }}</h1>
+            <h2>Client Configuration</h2>
+        </hgroup>
+
+        <article>
+            <header>Details</header>
+            <table role="grid">
+                <tr>
+                    <th scope="row">IP Address</th>
+                    <td><code>{{ client.ip_address }}</code></td>
+                </tr>
+                <tr>
+                    <th scope="row">Public Key</th>
+                    <td><small>{{ client.public_key }}</small></td>
+                </tr>
+                <tr>
+                    <th scope="row">Created At</th>
+                    <td>{{ client.created_at }}</td>
+                </tr>
+                <tr>
+                    <th scope="row">Status</th>
+                    <td>
+                        <span id="status-badge" class="{{ 'status-active' if client.enabled else 'status-inactive' }}" style="display:inline-block; width:10px; height:10px; border-radius:50%; margin-right:5px;"></span>
+                        <span id="status-text">{{ 'Active' if client.enabled else 'Disabled' }}</span>
+                    </td>
+                </tr>
+            </table>
+            
+            <div class="grid">
+                <button id="toggle-btn" onclick="toggleClient('{{ client.name }}')" class="{{ 'secondary' if client.enabled else '' }}">
+                    {{ 'Disable Client' if client.enabled else 'Enable Client' }}
+                </button>
+                <form action="{{ url_for('delete_client', client_name=client.name) }}" method="post" onsubmit="return confirm('Are you sure you want to delete this client? This cannot be undone.');">
+                    <button type="submit" class="contrast outline" style="width: 100%;">Delete Client</button>
+                </form>
+            </div>
+        </article>
+    </div>
+
+    <div>
+        <article>
+            <header>QR Code</header>
+            <div style="text-align: center;">
+                <img src="{{ url_for('client_qr', client_name=client.name) }}" alt="QR Code" style="max-width: 100%; height: auto; border-radius: 8px;">
+                <p><small>Scan with WireGuard Mobile App</small></p>
+            </div>
+            <footer>
+                <a href="{{ url_for('download_client_config', client_name=client.name) }}" role="button" style="width: 100%;">Download .conf</a>
+            </footer>
+        </article>
+
+        <article>
+            <header>Configuration Text</header>
+            <pre style="max-height: 300px; overflow-y: auto;"><code>{{ config_content }}</code></pre>
+            <button onclick="copyConfig()" class="outline" style="width: 100%; margin-bottom:0;">Copy to Clipboard</button>
+        </article>
+    </div>
+</div>
+
+<script>
+async function toggleClient(name) {
+    const btn = document.getElementById('toggle-btn');
+    const badge = document.getElementById('status-badge');
+    const text = document.getElementById('status-text');
+    
+    // Disable button during requests
+    btn.setAttribute('aria-busy', 'true');
+    
+    try {
+        const response = await fetch(`/clients/${name}/toggle`, { method: 'POST' });
+        const data = await response.json();
+        
+        if (data.success) {
+            if (data.enabled) {
+                btn.textContent = 'Disable Client';
+                btn.classList.remove('secondary'); // Primary color for enable
+                badge.classList.remove('status-inactive');
+                badge.classList.add('status-active');
+                text.textContent = 'Active';
+            } else {
+                btn.textContent = 'Enable Client';
+                btn.classList.add('secondary'); // Secondary color for disable
+                badge.classList.remove('status-active');
+                badge.classList.add('status-inactive');
+                text.textContent = 'Disabled';
+            }
+        } else {
+            alert('Error: ' + data.error);
+        }
+    } catch (e) {
+        alert('Network error');
+    } finally {
+        btn.setAttribute('aria-busy', 'false');
+    }
+}
+
+function copyConfig() {
+    const configText = document.querySelector('pre code').innerText;
+    navigator.clipboard.writeText(configText).then(() => {
+        alert('Configuration copied to clipboard!');
+    });
+}
+</script>
+{% endblock %}
