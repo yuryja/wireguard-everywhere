@@ -3,63 +3,63 @@
 {% block content %}
 <nav>
     <ul>
-        <li><a href="{{ url_for('index') }}">← Back to Dashboard</a></li>
+        <li><a href="{{ url_for('index') }}">{{ _('back_dashboard') }}</a></li>
     </ul>
 </nav>
 
 <hgroup>
-    <h1>Settings</h1>
-    <h2>System Configuration</h2>
+    <h1>{{ _('settings') }}</h1>
+    <h2>{{ _('system_info') }}</h2>
 </hgroup>
 
 <div class="grid">
     <div>
         <article>
-            <header>Change Password</header>
+            <header>{{ _('change_password') }}</header>
             <form method="post">
                 <input type="hidden" name="action" value="change_password">
                 
-                <label for="current_password">Current Password</label>
+                <label for="current_password">{{ _('current_password') }}</label>
                 <input type="password" id="current_password" name="current_password" required>
                 
-                <label for="new_password">New Password</label>
+                <label for="new_password">{{ _('new_password') }}</label>
                 <input type="password" id="new_password" name="new_password" required minlength="8">
                 
-                <label for="confirm_password">Confirm New Password</label>
+                <label for="confirm_password">{{ _('confirm_password') }}</label>
                 <input type="password" id="confirm_password" name="confirm_password" required minlength="8">
                 
-                <button type="submit">Update Password</button>
+                <button type="submit">{{ _('update_password') }}</button>
             </form>
         </article>
     </div>
 
     <div>
         <article>
-            <header>System Info</header>
+            <header>{{ _('system_info') }}</header>
             <table role="grid">
                 <tr>
-                    <th scope="row">WireGuard Version</th>
+                    <th scope="row">{{ _('wireguard_version') }}</th>
                     <td><code>Latest</code></td>
                 </tr>
                 <tr>
-                    <th scope="row">Web Interface</th>
-                    <td>v1.0.0</td>
+                    <th scope="row">{{ _('web_interface') }}</th>
+                    <td>v1.1.0</td>
                 </tr>
                 <tr>
-                    <th scope="row">Internal IP</th>
+                    <th scope="row">{{ _('internal_ip') }}</th>
                     <td>10.7.0.1</td>
                 </tr>
             </table>
         </article>
 
         <article>
-            <header>Activity Log</header>
+            <header>{{ _('activity_log') }}</header>
             <div style="max-height: 400px; overflow-y: auto;">
                 <table role="grid" class="striped">
                     <thead>
                         <tr>
-                            <th>Action</th>
-                            <th>Time</th>
+                            <th>{{ _('action') }}</th>
+                            <th>{{ _('time') }}</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -75,7 +75,7 @@
                         </tr>
                         {% else %}
                         <tr>
-                            <td colspan="2" style="text-align: center;">No logs yet</td>
+                            <td colspan="2" style="text-align: center;">{{ _('no_logs') }}</td>
                         </tr>
                         {% endfor %}
                     </tbody>

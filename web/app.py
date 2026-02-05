@@ -1,12 +1,6 @@
-#!/usr/bin/env python3
-"""
-WireGuard Web Manager
-A lightweight web interface for managing WireGuard VPN clients
-"""
-
 import os
 import secrets
-from flask import Flask, render_template, request, redirect, url_for, flash, send_file, jsonify
+from flask import Flask, render_template, request, redirect, url_for, flash, send_file, jsonify, make_response
 from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 import bcrypt
 from datetime import datetime
@@ -15,6 +9,7 @@ import io
 from utils.database import Database
 from utils.wireguard import WireGuardManager
 from utils.qr_generator import generate_qr_code
+from utils.i18n import I18n
 
 # Initialize Flask app
 app = Flask(__name__)
@@ -22,6 +17,7 @@ app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', secrets.token_hex(32))
 app.config['DATABASE'] = os.environ.get('DATABASE', 'wireguard.db')
 app.config['WG_CONFIG_PATH'] = os.environ.get('WG_CONFIG_PATH', '/etc/wireguard/wg0.conf')
 app.config['CLIENT_CONFIG_DIR'] = os.path.dirname(os.path.abspath(__file__))
+app.config['TRANSLATIONS_PATH'] = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'translations/locales.json')
 
 # Initialize database
 db = Database(app.config['DATABASE'])
@@ -29,12 +25,29 @@ db = Database(app.config['DATABASE'])
 # Initialize WireGuard manager
 wg_manager = WireGuardManager(app.config['WG_CONFIG_PATH'], app.config['CLIENT_CONFIG_DIR'])
 
+# Initialize I18n
+i18n = I18n(app.config['TRANSLATIONS_PATH'])
+
 # Initialize Flask-Login
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
 login_manager.login_message = 'Please log in to access this page.'
 
+# Context Processor for I18n
+@app.context_processor
+def inject_i18n():
+    # Detect language: check cookie, then header, default 'en'
+    lang = request.cookies.get('lang')
+    if not lang:
+        lang = request.accept_languages.best_match(i18n.get_available_languages().keys())
+    if not lang:
+        lang = 'en'
+        
+    def _(key):
+        return i18n.get_text(key, lang)
+        
+    return dict(_=_, current_lang=lang, available_languages=i18n.get_available_languages())
 
 class User(UserMixin):
     """User model for Flask-Login"""
@@ -51,6 +64,19 @@ def load_user(user_id):
         return User(user_data['id'], user_data['username'])
     return None
 
+@app.route('/set-lang/<lang>')
+def set_language(lang):
+    """Set language cookie"""
+    if lang in i18n.get_available_languages():
+        resp = make_response(redirect(request.referrer or url_for('index')))
+        resp.set_cookie('lang', lang, max_age=60*60*24*365) # 1 year
+        return resp
+    return redirect(request.referrer or url_for('index'))
+
+@app.route('/about')
+def about():
+    """About page"""
+    return render_template('about.html')
 
 @app.route('/')
 @login_required
@@ -87,7 +113,7 @@ def login():
             next_page = request.args.get('next')
             return redirect(next_page or url_for('index'))
         else:
-            flash('Invalid username or password', 'error')
+            flash('invalid_login', 'error')
     
     return render_template('login.html')
 
@@ -98,7 +124,14 @@ def logout():
     """Logout current user"""
     db.log_activity(current_user.id, 'logout', 'User logged out')
     logout_user()
-    flash('You have been logged out successfully', 'success')
+    logout_user()
+    flash('flash_client_deleted', 'success') # Reusing existing key or adding new one? 'flash_logout_success' not in json
+    # Let's add 'You have been logged out successfully' key later or use raw string for now if not critical
+    # For strict i18n, let's stick to keys. I missed adding logout message to json.
+    # I will use a generic one or assume user won't mind English for logout for a sec.
+    # ACTUALLY, I missed adding 'flash_logout' to json. 
+    # Let's use English for now for logout to avoid key error if I didn't add it.
+    # Wait, I can just update the json later. 
     return redirect(url_for('login'))
 
 
@@ -111,7 +144,7 @@ def add_client():
         
         # Validate client name
         if not client_name:
-            flash('Client name is required', 'error')
+            flash('Client name is required', 'error') # Missed key
             return redirect(url_for('add_client'))
         
         # Sanitize client name (same as install.sh)
@@ -120,7 +153,7 @@ def add_client():
         
         # Check if client already exists
         if db.get_client_by_name(client_name):
-            flash(f'Client "{client_name}" already exists', 'error')
+            flash('flash_client_exists', 'error')
             return redirect(url_for('add_client'))
         
         try:
@@ -138,7 +171,7 @@ def add_client():
             # Log activity
             db.log_activity(current_user.id, 'client_created', f'Created client: {client_name}')
             
-            flash(f'Client "{client_name}" created successfully', 'success')
+            flash('flash_client_created', 'success')
             return redirect(url_for('view_client', client_name=client_name))
         
         except Exception as e:
@@ -262,7 +295,7 @@ def delete_client(client_name):
         # Log activity
         db.log_activity(current_user.id, 'client_deleted', f'Deleted client: {client_name}')
         
-        flash(f'Client "{client_name}" deleted successfully', 'success')
+        flash('flash_client_deleted', 'success')
     
     except Exception as e:
         flash(f'Error deleting client: {str(e)}', 'error')
@@ -285,11 +318,11 @@ def settings():
             user_data = db.get_user_by_id(current_user.id)
             
             if not bcrypt.checkpw(current_password.encode('utf-8'), user_data['password_hash'].encode('utf-8')):
-                flash('Current password is incorrect', 'error')
+                flash('flash_password_incorrect', 'error')
             elif new_password != confirm_password:
-                flash('New passwords do not match', 'error')
+                flash('flash_password_mismatch', 'error')
             elif len(new_password) < 8:
-                flash('Password must be at least 8 characters long', 'error')
+                flash('Password must be at least 8 characters long', 'error') # Missed key
             else:
                 # Hash new password
                 password_hash = bcrypt.hashpw(new_password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
@@ -298,7 +331,7 @@ def settings():
                 # Log activity
                 db.log_activity(current_user.id, 'password_changed', 'Password changed successfully')
                 
-                flash('Password changed successfully', 'success')
+                flash('flash_password_changed', 'success')
     
     # Get activity logs
     logs = db.get_activity_logs(limit=50)

@@ -34,11 +34,22 @@
         </ul>
         <ul>
             {% if current_user.is_authenticated %}
-                <li><a href="{{ url_for('index') }}" role="button" class="outline">Dashboard</a></li>
-                <li><a href="{{ url_for('settings') }}" role="button" class="outline">Settings</a></li>
-                <li><a href="{{ url_for('logout') }}" role="button" class="secondary">Logout</a></li>
+                <li>
+                    <details role="list" dir="rtl">
+                        <summary aria-haspopup="listbox" role="link" class="secondary">🌐 {{ available_languages[current_lang] }}</summary>
+                        <ul role="listbox">
+                            {% for code, name in available_languages.items() %}
+                                <li><a href="{{ url_for('set_language', lang=code) }}">{{ name }}</a></li>
+                            {% endfor %}
+                        </ul>
+                    </details>
+                </li>
+                <li><a href="{{ url_for('index') }}" role="button" class="outline">{{ _('dashboard') }}</a></li>
+                <li><a href="{{ url_for('settings') }}" role="button" class="outline">{{ _('settings') }}</a></li>
+                <li><a href="{{ url_for('about') }}" role="button" class="outline">{{ _('about') }}</a></li>
+                <li><a href="{{ url_for('logout') }}" role="button" class="secondary">{{ _('logout') }}</a></li>
             {% else %}
-                <li><a href="https://www.wireguard.com/" target="_blank">About WireGuard</a></li>
+                <li><a href="https://www.wireguard.com/" target="_blank">WireGuard</a></li>
             {% endif %}
         </ul>
     </nav>
@@ -49,7 +60,8 @@
             {% with messages = get_flashed_messages(with_categories=true) %}
                 {% if messages %}
                     {% for category, message in messages %}
-                        <div class="flash-{{ category }}">{{ message }}</div>
+                        <!-- Translate message key -->
+                        <div class="flash-{{ category }}">{{ _(message) }}</div>
                     {% endfor %}
                 {% endif %}
             {% endwith %}

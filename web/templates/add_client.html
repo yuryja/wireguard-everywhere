@@ -3,18 +3,18 @@
 {% block content %}
 <nav>
     <ul>
-        <li><a href="{{ url_for('index') }}">← Back to Dashboard</a></li>
+        <li><a href="{{ url_for('index') }}">{{ _('back_dashboard') }}</a></li>
     </ul>
 </nav>
 
 <article>
-    <header>Create New Client</header>
+    <header>{{ _('create_client_btn') }}</header>
     <form method="post">
-        <label for="client_name">Client Name</label>
-        <input type="text" id="client_name" name="client_name" placeholder="e.g. phone-yury, laptop-work" required pattern="[a-zA-Z0-9_-]+" title="Alphanumeric characters, underscores and hyphens only">
-        <small>Use letters, numbers, hyphens, and underscores only. Max 15 chars.</small>
+        <label for="client_name">{{ _('client_name') }}</label>
+        <input type="text" id="client_name" name="client_name" placeholder="{{ _('name_placeholder') }}" required pattern="[a-zA-Z0-9_-]+" title="Alphanumeric characters, underscores and hyphens only">
+        <small>{{ _('name_help') }}</small>
 
-        <button type="submit">Create Client</button>
+        <button type="submit">{{ _('create_client_btn') }}</button>
     </form>
 </article>
 {% endblock %}

@@ -4,17 +4,17 @@
 <div class="grid">
     <div>
         <hgroup>
-            <h1>Login</h1>
-            <h2>Access your VPN Management Console</h2>
+            <h1>{{ _('login_title') }}</h1>
+            <h2>{{ _('login_subtitle') }}</h2>
         </hgroup>
         <form method="post">
-            <input type="text" name="username" placeholder="Username" aria-label="Username" required>
-            <input type="password" name="password" placeholder="Password" aria-label="Password" required>
+            <input type="text" name="username" placeholder="{{ _('username') }}" aria-label="Username" required>
+            <input type="password" name="password" placeholder="{{ _('password') }}" aria-label="Password" required>
             <label for="remember">
                 <input type="checkbox" id="remember" name="remember">
-                Remember me
+                {{ _('remember_me') }}
             </label>
-            <button type="submit">Login</button>
+            <button type="submit">{{ _('login_btn') }}</button>
         </form>
     </div>
     <div style="display: flex; align-items: center; justify-content: center; opacity: 0.5;">

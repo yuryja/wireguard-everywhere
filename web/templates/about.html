@@ -1,0 +1,57 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<nav>
+    <ul>
+        <li><a href="{{ url_for('index') }}">{{ _('back_dashboard') }}</a></li>
+    </ul>
+</nav>
+
+<hgroup>
+    <h1>{{ _('about_title') }}</h1>
+    <h2>{{ _('about_subtitle') }}</h2>
+</hgroup>
+
+<div class="grid">
+    <div>
+        <article>
+            <header>Project Info</header>
+            <table role="grid">
+                <tr>
+                    <th scope="row">{{ _('version') }}</th>
+                    <td>1.1.0</td>
+                </tr>
+                <tr>
+                    <th scope="row">{{ _('developer') }}</th>
+                    <td><strong>Yury Jajitzky</strong></td>
+                </tr>
+                <tr>
+                    <th scope="row">{{ _('original_script') }}</th>
+                    <td>Based on <a href="https://github.com/Nyr/wireguard-install" target="_blank">Nyr/wireguard-install</a></td>
+                </tr>
+                <tr>
+                    <th scope="row">Source Code</th>
+                    <td><a href="https://github.com/yuryja/wireguard-everywhere" target="_blank">GitHub</a></td>
+                </tr>
+            </table>
+        </article>
+    </div>
+
+    <div>
+        <article>
+            <header>{{ _('support_project') }}</header>
+            <p>{{ _('support_desc') }}</p>
+            
+            <div style="text-align: center; margin-top: 2rem; margin-bottom: 2rem;">
+                <a href="https://paypal.me/yuryja" role="button" class="contrast" target="_blank">
+                    ☕ {{ _('donate_paypal') }}
+                </a>
+            </div>
+            
+            <footer>
+                <small>Made with ❤️ for the Open Source community.</small>
+            </footer>
+        </article>
+    </div>
+</div>
+{% endblock %}

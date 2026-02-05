@@ -176,6 +176,7 @@ WireGuard Everywhere now includes a lightweight web interface to manage your VPN
 - 📱 **QR Codes**: Display QR codes for easy mobile setup
 - 📥 **Downloads**: Download `.conf` files directly
 - 🔒 **Secure**: Password protected login
+- 🌍 **Multi-language**: Supports English, Spanish, Portuguese, French, and Italian
 
 ### How to Run
 
@@ -226,7 +227,10 @@ If you find this project useful, you can support my work here:
 
 ## 📄 License
 
-This project is based on [Nyr/wireguard-install](https://github.com/Nyr/wireguard-install) and is released under the MIT License.
+This project is released under the **MIT License**.
+
+- Original installer logic: Copyright (c) 2020 Nyr
+- Web Interface & Modifications: Copyright (c) 2026 Yury Jajitzky
 
 ## ⚠️ Disclaimer
 
@@ -234,11 +238,12 @@ This software is provided "as is", without warranty of any kind. Use at your own
 
 ## 🙏 Credits
 
-This project is significantly based on the excellent [wireguard-install](https://github.com/Nyr/wireguard-install) script. Full credit for the original installer logic goes to **Nyr**.
+This project is significantly based on the excellent [wireguard-install](https://github.com/Nyr/wireguard-install) script.
 
-- Original Installer: [Nyr/wireguard-install](https://github.com/Nyr/wireguard-install)
-- WireGuard®: [Jason A. Donenfeld](https://www.wireguard.com/)
-- BoringTun: [Cloudflare](https://github.com/cloudflare/boringtun)
+- **Web Interface & Extended Features**: [Yury Jajitzky](https://github.com/yuryja)
+- **Original Installer Logic**: [Nyr](https://github.com/Nyr)
+- **WireGuard®**: [Jason A. Donenfeld](https://www.wireguard.com/)
+- **BoringTun**: [Cloudflare](https://github.com/cloudflare/boringtun)
 
 ---
 
