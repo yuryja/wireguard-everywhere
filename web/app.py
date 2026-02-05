@@ -86,7 +86,7 @@ def index():
     stats = {
         'total_clients': len(clients),
         'active_clients': sum(1 for c in clients if c['enabled']),
-        'total_data': sum(c.get('data_usage', 0) for c in clients),
+        'total_data': 0, # Placeholder until data tracking is implemented
         'server_ip': wg_manager.get_server_config()['endpoint']
     }
     return render_template('dashboard.html', clients=clients, stats=stats)
